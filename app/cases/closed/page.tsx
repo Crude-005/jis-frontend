@@ -5,9 +5,9 @@ import { API } from "@/lib/api";
 
 export default function ClosedCases() {
   const [cin, setCin] = useState("");
-  const [data, setData] = useState<any>(null);
+  const [data, setData] = useState<any>();
 
-  const handleAccess = async () => {
+  const access = async () => {
     const userId = localStorage.getItem("userId");
 
     const res = await API.post("/cases/access", {
@@ -19,24 +19,21 @@ export default function ClosedCases() {
   };
 
   return (
-    <div className="bg-white p-6 rounded-xl shadow">
-      <h2 className="text-xl font-semibold mb-4">Browse Closed Case</h2>
+    <div className="max-w-xl space-y-4">
+      <h1 className="text-2xl font-semibold">Closed Cases</h1>
 
       <input
-        placeholder="Enter CIN"
+        className="w-full border p-2 rounded"
+        placeholder="CIN"
         onChange={(e) => setCin(e.target.value)}
-        className="w-full border p-2 rounded mb-3"
       />
 
-      <button
-        onClick={handleAccess}
-        className="bg-blue-600 text-white px-4 py-2 rounded w-full"
-      >
-        Access Case
+      <button onClick={access} className="bg-blue-600 text-white px-4 py-2 rounded">
+        Access
       </button>
 
       {data && (
-        <pre className="mt-4 bg-gray-100 p-3 rounded text-sm">
+        <pre className="bg-gray-100 p-3 rounded text-sm">
           {JSON.stringify(data, null, 2)}
         </pre>
       )}

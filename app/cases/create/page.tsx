@@ -5,16 +5,10 @@ import { API } from "@/lib/api";
 import { useRouter } from "next/navigation";
 
 export default function CreateCase() {
-  const [form, setForm] = useState({
-    defendantDetails: "",
-    crimeType: "",
-    arrestInfo: "",
-    prosecutorDetails: "",
-  });
-
+  const [form, setForm] = useState<any>({});
   const router = useRouter();
 
-  const handleSubmit = async () => {
+  const submit = async () => {
     const userId = localStorage.getItem("userId");
 
     await API.post("/cases", {
@@ -26,24 +20,23 @@ export default function CreateCase() {
   };
 
   return (
-    <div className="bg-white p-6 rounded-xl shadow">
-      <h2 className="text-xl font-semibold mb-4">Create Case</h2>
+    <div className="max-w-xl space-y-4">
+      <h1 className="text-2xl font-semibold">Create Case</h1>
 
-      {Object.entries(form).map(([key, value]) => (
-        <input
-          key={key}
-          placeholder={key}
-          value={value}
-          onChange={(e) => setForm({ ...form, [key]: e.target.value })}
-          className="w-full border p-2 rounded mb-3"
-        />
-      ))}
+      <input className="w-full border p-2 rounded" placeholder="Defendant"
+        onChange={(e)=>setForm({...form, defendantDetails:e.target.value})} />
 
-      <button
-        onClick={handleSubmit}
-        className="bg-blue-600 text-white px-4 py-2 rounded w-full"
-      >
-        Submit
+      <input className="w-full border p-2 rounded" placeholder="Crime Type"
+        onChange={(e)=>setForm({...form, crimeType:e.target.value})} />
+
+      <input className="w-full border p-2 rounded" placeholder="Arrest Info"
+        onChange={(e)=>setForm({...form, arrestInfo:e.target.value})} />
+
+      <input className="w-full border p-2 rounded" placeholder="Prosecutor"
+        onChange={(e)=>setForm({...form, prosecutorDetails:e.target.value})} />
+
+      <button onClick={submit} className="bg-blue-600 text-white px-4 py-2 rounded">
+        Create
       </button>
     </div>
   );

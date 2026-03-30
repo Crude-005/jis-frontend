@@ -3,42 +3,47 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-export default function LoginPage() {
+export default function Login() {
   const [userId, setUserId] = useState("");
   const [role, setRole] = useState("REGISTRAR");
   const router = useRouter();
 
-  const handleLogin = () => {
+  const login = () => {
+    if (!userId) return alert("Enter userId");
+
     localStorage.setItem("userId", userId);
     localStorage.setItem("role", role);
-    router.push("/cases/pending");
+
+    router.push("/");
   };
 
   return (
-    <div className="max-w-md mx-auto bg-white p-6 rounded-xl shadow">
-      <h2 className="text-xl font-semibold mb-4">Login</h2>
+    <div className="h-screen flex items-center justify-center">
+      <div className="bg-white p-6 rounded-xl border w-80 space-y-4">
+        <h2 className="text-xl font-semibold text-center">Login to JIS</h2>
 
-      <input
-        className="w-full border p-2 rounded mb-3"
-        placeholder="User ID"
-        onChange={(e) => setUserId(e.target.value)}
-      />
+        <input
+          className="w-full border p-2 rounded"
+          placeholder="User ID"
+          onChange={(e) => setUserId(e.target.value)}
+        />
 
-      <select
-        className="w-full border p-2 rounded mb-3"
-        onChange={(e) => setRole(e.target.value)}
-      >
-        <option value="REGISTRAR">Registrar</option>
-        <option value="JUDGE">Judge</option>
-        <option value="LAWYER">Lawyer</option>
-      </select>
+        <select
+          className="w-full border p-2 rounded"
+          onChange={(e) => setRole(e.target.value)}
+        >
+          <option value="REGISTRAR">Registrar</option>
+          <option value="JUDGE">Judge</option>
+          <option value="LAWYER">Lawyer</option>
+        </select>
 
-      <button
-        onClick={handleLogin}
-        className="bg-blue-600 text-white px-4 py-2 rounded w-full"
-      >
-        Login
-      </button>
+        <button
+          onClick={login}
+          className="bg-blue-600 text-white w-full py-2 rounded"
+        >
+          Login
+        </button>
+      </div>
     </div>
   );
 }

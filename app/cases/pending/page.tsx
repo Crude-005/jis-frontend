@@ -2,41 +2,72 @@
 
 import { useEffect, useState } from "react";
 import { API } from "@/lib/api";
-import { Case } from "@/types/case";
 import Link from "next/link";
+import { Eye } from "lucide-react";
 
 export default function PendingCases() {
-  const [cases, setCases] = useState<Case[]>([]);
+  const [cases, setCases] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     API.get("/cases/pending")
       .then((res) => setCases(res.data))
-      .catch(console.error);
+      .finally(() => setLoading(false));
   }, []);
 
   return (
-    <div>
-      <div className="flex justify-between mb-4">
-        <h2 className="text-2xl font-semibold">Pending Cases</h2>
-        <Link
-          href="/cases/create"
-          className="bg-green-600 text-white px-4 py-2 rounded"
-        >
-          + New Case
-        </Link>
+    <div className="space-y-6">
+      {/* Header */}
+      <div>
+        <h1 className="text-2xl font-semibold">Pending Cases</h1>
+        <p className="text-sm text-gray-500">
+          All currently active court cases
+        </p>
       </div>
 
-      <div className="grid gap-4">
-        {cases.map((c) => (
-          <Link
-            key={c.cin}
-            href={`/cases/${c.cin}`}
-            className="bg-white p-4 rounded-xl shadow hover:bg-gray-50"
-          >
-            <p className="font-medium">{c.cin}</p>
-            <p className="text-sm text-gray-600">{c.defendantDetails}</p>
-          </Link>
-        ))}
+      {/* Card */}
+      <div className="bg-white rounded-xl border shadow-sm overflow-hidden">
+        {loading ? (
+          <p className="p-6 text-sm text-gray-500">Loading cases...</p>
+        ) : cases.length === 0 ? (
+          <p className="p-6 text-sm text-gray-500">No pending cases</p>
+        ) : (
+          <table className="w-full text-sm">
+            <thead className="bg-gray-50 border-b">
+              <tr>
+                <th className="p-4 text-left font-medium">CIN</th>
+                <th className="p-4 text-left font-medium">Defendant</th>
+                <th className="p-4 text-left font-medium">Crime</th>
+                <th className="p-4 text-right font-medium">Action</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {cases.map((c) => (
+                <tr
+                  key={c.cin}
+                  className="border-t hover:bg-gray-50 transition"
+                >
+                  <td className="p-4 font-medium text-blue-600">{c.cin}</td>
+
+                  <td className="p-4">{c.defendantDetails}</td>
+
+                  <td className="p-4 text-gray-600">{c.crimeType}</td>
+
+                  <td className="p-4 text-right">
+                    <Link
+                      href={`/cases/${c.cin}`}
+                      className="inline-flex items-center gap-1 text-sm text-blue-600 hover:underline"
+                    >
+                      <Eye size={14} />
+                      View
+                    </Link>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
       </div>
     </div>
   );
